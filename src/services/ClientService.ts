@@ -1,0 +1,145 @@
+import { Observable, of, throwError } from 'rxjs';
+import { IClient } from '../interfaces';
+import { createPool, MysqlError, Pool } from 'mysql';
+
+
+export class ClientService {
+
+    private static instance: ClientService | null;
+
+    private clients: IClient[] = [];
+    private genID = 1;
+
+    private pool: Pool = createPool({
+        host: '127.0.0.1',
+        user: 'root',
+        password: '',
+        database: 'exemplo'
+});
+
+    public static getInstance(): ClientService {
+
+        if (!ClientService.instance) {
+            ClientService.instance = new ClientService();
+        }
+
+        return ClientService.instance;
+    }
+
+    public static destroyInstance(): void {
+        ClientService.instance = null;
+    }
+
+
+    public getAll(): Observable<any[]> {
+        return new Observable<any[]>((obs) => {
+            const query = `SELECT * FROM client`;
+
+            this.pool.query({ sql: query }, (err: any | null, results?: any) => {
+                if (err) {
+                    obs.error(err);
+                    obs.complete();
+                    return;
+                }
+
+                const res: any[] = results;
+                const clients: any[] = [];
+
+                res.map((client) => {
+                    clients.push(client);
+                });
+                obs.next(clients);
+                obs.complete();
+            }).start();
+        });
+    }
+
+
+
+    public create(name: string): Observable<string> {
+        const id = this.genID;
+        this.genID++;
+        return new Observable<any>((obs) => {
+            const query = `
+            INSERT INTO client ( name) VALUES (?)`;
+            this.pool.query({ sql: query, values: [name] },
+                (err: MysqlError | null, results?: any) => {
+                    if (err) {
+                        obs.error(err);
+                        return;
+                    }
+                    obs.next(results);
+                    obs.complete();
+                    return of('Usuário Inserido com Sucesso!');
+                }).start();
+        });
+    }
+
+    public update(cli: any): Observable < any > {
+
+        return new Observable<any>((obs) => {
+            const query = `UPDATE client SET name = ? WHERE id = ?`;
+
+
+            this.pool
+                .query({ sql: query, values: [
+                    cli.name,
+                    cli.id]
+                },
+                    (err: MysqlError | null, results?: any) => {
+                        if (err) {
+                            obs.error(err);
+                            return;
+                        }
+                        obs.next(results);
+                        obs.complete();
+                    }).start();
+        });
+    }
+
+    public delete(id: number): Observable<any> {
+
+        return new Observable<any>((obs) => {
+            const query = `DELETE FROM client WHERE id = ?`;
+            this.pool
+                .query({ sql: query, values: id },
+                    (err: MysqlError | null, results?: any) => {
+                        if (err) {
+                            obs.error(err);
+                            return;
+                        }
+                        obs.next(results);
+                        obs.complete();
+                    }).start();
+        });
+
+}
+
+
+
+    public getByIndex(id: number): Observable<any> {
+        return new Observable<any[]>((obs) => {
+            const query = `SELECT * FROM client where id = ?`;
+            this.pool
+                .query({ sql: query, values: id }, (err: any | null, results?: any) => {
+                if (err) {
+                    obs.error(err);
+                    obs.complete();
+                    return;
+                }
+                const res: any[] = results;
+                const clients: any[] = [];
+
+                res.map((client) => {
+                    clients.push(client);
+                });
+                obs.next(clients);
+                obs.complete();
+            }).start();
+        });
+    }
+}
+function client(client: any, IClient: any): any {
+    throw new Error('Function not implemented.');
+}
+

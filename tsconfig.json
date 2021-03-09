@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+          "*": [
+              "types/*"
+          ]
+      },
+      "target": "ESNEXT",
+      "module": "commonjs",
+      "lib": [
+          "es2015"
+      ],
+      "declaration": true, 
+      "outDir": "./lib",
+      "strict": true,
+      "noImplicitAny": true,
+      "moduleResolution": "node",
+      "allowSyntheticDefaultImports": true, 
+      "esModuleInterop": true 
+  },
+  "exclude": [
+      "node_modules",
+      "**/__tests__/*",
+      "src/meta",
+      "lib"
+  ]
+}
