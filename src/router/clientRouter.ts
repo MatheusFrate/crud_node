@@ -20,8 +20,11 @@ clientRouter.get('/client/:id', (req, res) => {
     }
 
     db.getByIndex(Number(req.params.id)).subscribe((client) => {
+    if (!res == null) {
         return res.json(client);
-    }, (err) => {
+    } else {
+        return res.sendStatus(404);
+    }}, (err) => {
         return res.status(500).json({error: err, msg: 'Internal Server Error'});
     });
 });
@@ -42,10 +45,12 @@ clientRouter.post('/updateClient', (req, res) => {
     if (!req.body.name || !req.body.id) {
         return res.status(401).send('Parametros Ausentes. Tente Novamente.');
     }
-
     db.update(req.body).subscribe(() => {
+    if (!res == null) {
         return res.send('cliente alterado com sucesso');
-    }, (err) => {
+    } else {
+        return res.sendStatus(404);
+    }}, (err) => {
         return res.status(500).json({error: err, msg: 'Internal Server Error'});
     });
 });
@@ -56,8 +61,11 @@ clientRouter.post('/deleteClient', (req, res) => {
     }
 
     db.delete(req.body.id).subscribe(() => {
+    if (!res == null) {
         return res.send('cliente deletado com sucesso');
-    }, (err) => {
+    } else {
+        return res.sendStatus(404);
+    }}, (err) => {
         return res.status(500).json({error: err, msg: 'Internal Server Error'});
     });
 });

@@ -1,3 +1,4 @@
+import { userRouter } from './router/userRouter';
 import express from 'express';
 import * as bodyParser from 'body-parser';
 import { clientRouter } from './router';
@@ -8,7 +9,7 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(clientRouter);
+app.use(clientRouter, userRouter);
 
 app.get('/', (req, res) => {
     return res.send('Bem-Vindo! a Minha API');

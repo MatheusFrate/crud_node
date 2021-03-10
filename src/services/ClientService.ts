@@ -8,14 +8,13 @@ export class ClientService {
     private static instance: ClientService | null;
 
     private clients: IClient[] = [];
-    private genID = 1;
 
     private pool: Pool = createPool({
         host: '127.0.0.1',
         user: 'root',
         password: '',
         database: 'exemplo'
-});
+    });
 
     public static getInstance(): ClientService {
 
@@ -31,8 +30,8 @@ export class ClientService {
     }
 
 
-    public getAll(): Observable<any[]> {
-        return new Observable<any[]>((obs) => {
+    public getAll(): Observable<IClient[]> {
+        return new Observable<IClient[]>((obs) => {
             const query = `SELECT * FROM client`;
 
             this.pool.query({ sql: query }, (err: any | null, results?: any) => {
@@ -45,8 +44,8 @@ export class ClientService {
                 const res: any[] = results;
                 const clients: any[] = [];
 
-                res.map((client) => {
-                    clients.push(client);
+                res.map((cli) => {
+                    clients.push(cli);
                 });
                 obs.next(clients);
                 obs.complete();
@@ -56,12 +55,10 @@ export class ClientService {
 
 
 
-    public create(name: string): Observable<string> {
-        const id = this.genID;
-        this.genID++;
+    public create(name: string): Observable<IClient> {
         return new Observable<any>((obs) => {
-            const query = `
-            INSERT INTO client ( name) VALUES (?)`;
+            const query =
+            `INSERT INTO client ( name) VALUES (?)`;
             this.pool.query({ sql: query, values: [name] },
                 (err: MysqlError | null, results?: any) => {
                     if (err) {
@@ -70,7 +67,6 @@ export class ClientService {
                     }
                     obs.next(results);
                     obs.complete();
-                    return of('Usuário Inserido com Sucesso!');
                 }).start();
         });
     }
@@ -130,8 +126,8 @@ export class ClientService {
                 const res: any[] = results;
                 const clients: any[] = [];
 
-                res.map((client) => {
-                    clients.push(client);
+                res.map((cli) => {
+                    clients.push(cli);
                 });
                 obs.next(clients);
                 obs.complete();
@@ -139,7 +135,5 @@ export class ClientService {
         });
     }
 }
-function client(client: any, IClient: any): any {
-    throw new Error('Function not implemented.');
-}
+
 
