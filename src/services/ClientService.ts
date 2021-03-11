@@ -108,12 +108,11 @@ export class ClientService {
                         obs.complete();
                     }).start();
         });
-
-}
-
+    }
 
 
-    public getByIndex(id: number): Observable<any> {
+
+    public getByIndex(id: number): Observable<IClient[]> {
         return new Observable<any[]>((obs) => {
             const query = `SELECT * FROM client where id = ?`;
             this.pool

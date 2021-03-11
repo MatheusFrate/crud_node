@@ -3,4 +3,10 @@ export interface IUser {
     name: string;
     password: number;
     email: string;
+    isauthenticated: boolean;
+}
+
+export interface IUserAuthentication {
+    id: number;
+    isauthenticated: boolean;
 }

@@ -1,6 +1,7 @@
-import { createPool, Pool } from 'mysql';
-import { Observable } from 'rxjs';
-import { IUser } from './../interfaces/iUser';
+import { createPool, Pool, MysqlError } from 'mysql';
+import { observable, Observable } from 'rxjs';
+import { updateLanguageServiceSourceFile } from 'typescript';
+import { IUser, IUserAuthentication } from './../interfaces/iUser';
 export class UserService {
     private static instance: UserService | null;
 
@@ -45,6 +46,70 @@ export class UserService {
                 obs.next(clients);
                 obs.complete();
             }).start();
+        });
+    }
+
+    public getByIndex(id: number): Observable<IUserAuthentication> {
+        return new Observable<IUserAuthentication>((obs) => {
+            const query = `SELECT * FROM user where id = ?`;
+            this.pool
+                .query({ sql: query, values: id }, (err: any | null, results?: IUser) => {
+                if (err) {
+                    obs.error(err);
+                    obs.complete();
+                    return;
+                }
+                const res: any = results;
+                obs.next(res);
+                obs.complete();
+            }).start();
+        });
+    }
+
+    public create(body: IUser): Observable<IUser> {
+        return new  Observable<any>((obs) => {
+            const query  = `INSERT INTO user ( name, password, email) VALUES (?,?,?)`;
+            this.pool.query({sql: query, values: [body.name, body.password, body.email]},
+                (err: MysqlError | null, results?: any) => {
+                    if (err) {
+                        obs.error(err);
+                        return;
+                    }
+                    obs.next(results);
+                    obs.complete();
+                }).start();
+        });
+    }
+
+    public update(user: IUser): Observable <IUser> {
+
+        return new Observable<any>((obs) => {
+            const query = `UPDATE user SET name = ?, password = ? WHERE id = ?`;
+
+            this.pool.query({sql: query, values: [user.name, user.password, user.id]},
+                (err: MysqlError | null, results?: any) => {
+                    if (err) {
+                        obs.error(err);
+                        return;
+                    }
+                    obs.next(results);
+                    obs.complete();
+                }).start();
+        });
+    }
+
+    public delete(id: number): Observable<any> {
+        return new Observable<any>((obs) => {
+            const query = `DELETE FROM user WHERE id = ?`;
+            this.pool.query({sql: query, values: id},
+                (err: MysqlError | null, results?: any) => {
+                    if (err) {
+                        obs.error(err);
+                        return;
+                    }
+                    obs.next(results);
+                    obs.complete();
+                }).start();
         });
     }
 }
