@@ -30,7 +30,7 @@ userRouter.get('/user/:id', (req, res) => {
 
 
 userRouter.post('/addUser', (req, res) => {
-    if(!req.body.name && !req.body.password && !req.body.email) {
+    if (!req.body.name && !req.body.password && !req.body.email) {
         return res.status(401).send('Parametros ausentes');
     }
 
@@ -42,7 +42,7 @@ userRouter.post('/addUser', (req, res) => {
 });
 
 userRouter.post('/updateUser', (req, res) => {
-    if(!req.body.id && !req.body.name && !req.body.password) {
+    if (!req.body.id && !req.body.name && !req.body.password) {
         return res.status(401).send('Parametros ausentes');
     }
 
@@ -54,7 +54,7 @@ userRouter.post('/updateUser', (req, res) => {
 });
 
 userRouter.post('/deleteUser', (req, res) => {
-    if(!req.body.id){
+    if (!req.body.id) {
         return res.status(401).send('Parametros ausentes');
     }
 

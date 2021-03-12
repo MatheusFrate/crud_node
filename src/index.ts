@@ -2,9 +2,13 @@ import { userRouter } from './router/userRouter';
 import express from 'express';
 import * as bodyParser from 'body-parser';
 import { clientRouter } from './router';
+import cors from 'cors';
+
 
 const app: express.Application = express();
 
+
+app.use(cors());
 app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: false }));
