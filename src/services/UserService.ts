@@ -1,18 +1,11 @@
 import { createPool, Pool, MysqlError } from 'mysql';
-import { observable, Observable } from 'rxjs';
-import { updateLanguageServiceSourceFile } from 'typescript';
+import { Observable } from 'rxjs';
+import { DbConfig } from '../config';
 import { IUser, IUserAuthentication } from './../interfaces/iUser';
 export class UserService {
     private static instance: UserService | null;
 
-    private users: IUser[] = [];
-
-    private pool: Pool = createPool({
-        host: '127.0.0.1',
-        user: 'root',
-        password: '',
-        database: 'exemplo'
-    });
+    private pool: Pool = createPool(DbConfig);
 
     public static getInstance(): UserService {
         if (!UserService.instance) {
@@ -28,7 +21,7 @@ export class UserService {
 
     public getAll(): Observable<IUser[]> {
         return new Observable<IUser[]>((obs) => {
-            const query = `SELECT name, email FROM user`;
+            const query = `SELECT id, name, email FROM user`;
 
             this.pool.query({ sql: query }, (err: any | null, results?: any) => {
                 if (err) {

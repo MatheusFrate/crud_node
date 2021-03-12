@@ -1,20 +1,13 @@
-import { Observable, of, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IClient } from '../interfaces';
 import { createPool, MysqlError, Pool } from 'mysql';
-
+import { DbConfig } from '../config';
 
 export class ClientService {
 
     private static instance: ClientService | null;
 
-    private clients: IClient[] = [];
-
-    private pool: Pool = createPool({
-        host: '127.0.0.1',
-        user: 'root',
-        password: '',
-        database: 'exemplo'
-    });
+    private pool: Pool = createPool(DbConfig);
 
     public static getInstance(): ClientService {
 

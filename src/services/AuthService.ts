@@ -1,19 +1,16 @@
 import { createPool, Pool } from 'mysql';
-import { Observable } from 'rxjs';
-import { IUser, IUserAuthentication } from './../interfaces/iUser';
-import { UserService } from './UserService';
-
-const userService = UserService.getInstance();
+import { Observable, throwError, of } from 'rxjs';
+import { consoleTestResultHandler } from 'tslint/lib/test';
+import { DbConfig } from '../config';
+import { IUser } from './../interfaces/iUser';
 
 export class AuthService {
 
     private static instance: AuthService | null;
-    private pool: Pool = createPool({
-        host: '127.0.0.1',
-        user: 'root',
-        password: '',
-        database: 'exemplo'
-    });
+
+    private pool: Pool = createPool(DbConfig);
+
+    private sessions: IUser[] = [];
 
     public static getInstance(): AuthService {
 
@@ -28,53 +25,48 @@ export class AuthService {
         AuthService.instance = null;
     }
 
-    public login(body: IUser): Observable<any[]> {
-        return new Observable<any[]>((obs) => {
+    public login(email: string, pass: string): Observable<IUser> {
+
+        if (this.sessions.find((f) => f.email === email)) {
+            return throwError('Sessão Já Está em Uso!');
+        }
+
+        return new Observable<IUser>((obs) => {
             const query = `SELECT * FROM user where email = ? and password = ?`;
             this.pool
-                .query({ sql: query, values: [body.email, body.password] },
-                    (err: any | null, results?: any) => {
-                if (err) {
-                    obs.error(err);
-                    obs.complete();
-                    return;
-                }
-                obs.next(results);
-                obs.complete();
-                }).start();
-            const query2 = `UPDATE user SET isauthenticated = TRUE where email = ?`;
-            this.pool
-                .query({ sql: query2, values: [body.email]},
-                    (err2: any | null, results2?: any) => {
-                if (err2) {
-                    obs.error(err2);
-                    obs.complete();
-                    return;
-                }
-                obs.next(results2);
-                obs.complete();
-                }).start();
+                .query({ sql: query, values: [email, pass] },
+                    (err: any | null, results: any) => {
+                        if (err) {
+                            obs.error(err);
+                            return obs.complete();
+                        }
+                        if (results.length > 1) {
+                            obs.error('Usuários Duplicados!');
+                            return obs.complete();
+                        }
+                        console.log(results[0]);
+                        this.sessions.push(results[0]);
+                        obs.next(results);
+                        return obs.complete();
+                    }).start();
         });
     }
 
-    public isAuthenticated(id: number): boolean {
-        const user: Observable<IUserAuthentication> =  userService.getByIndex(id);
+    public isAuthenticated(id: number): IUser | undefined {
+        console.log(this.sessions);
+        return this.sessions.find((f) => f.id === id);
     }
 
-    public logout(id: number): Observable<any[]> {
-        return new Observable<any[]>((obs) => {
-            const query2 = `UPDATE user SET isauthenticated = FALSE where id = ?`;
-                this.pool
-                    .query({ sql: query2, values: [id]},
-                        (err2: any | null, results2?: any) => {
-                    if (err2) {
-                        obs.error(err2);
-                        obs.complete();
-                        return;
-                    }
-                    obs.next(results2);
-                    obs.complete();
-                    }).start();
-            });
+
+    public logout(id: number): Observable<any> {
+        const index = this.sessions.findIndex((f) => f.id === id);
+
+        if (index === -1) {
+            return throwError('Falha ao Efetuar Logout. Sessão Não Econtrada.');
+        }
+
+        this.sessions.splice(index, 1);
+
+        return of(1);
     }
 }
