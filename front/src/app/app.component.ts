@@ -1,6 +1,8 @@
+import { AddClientComponent } from './components/add-client/add-client.component';
 import { IClient } from './interfaces';
 import { Component, OnInit } from '@angular/core';
-import { ClientServiceService } from './client-service.service';
+// import { ClientServiceService } from './services/client.service';
+
 
 @Component({
   selector: 'app-root',
@@ -9,18 +11,9 @@ import { ClientServiceService } from './client-service.service';
 })
 export class AppComponent implements OnInit{
 
-  title = 'front';
   clientes: IClient[] = [];
 
-  constructor(private client: ClientServiceService) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.client.getClients().subscribe((res) => {
-      this.clientes = res;
-    }, (err) => {
-      console.log(err);
-    });
-  }
+  ngOnInit(): void {}
 }
-
-

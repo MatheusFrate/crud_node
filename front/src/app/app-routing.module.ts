@@ -1,7 +1,16 @@
+import { GetClientsComponent } from './components/get-clients/get-clients.component';
+import { GetAllClientsComponent } from './components/get-all-clients/get-all-clients.component';
+import { AddClientComponent } from './components/add-client/add-client.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [];
+
+const routes: Routes = [
+    { path: '', redirectTo: 'client', pathMatch: 'full'},
+    { path: 'client', component: GetAllClientsComponent},
+    { path: 'client/:id', component: GetClientsComponent},
+    { path: 'addClient', component: AddClientComponent},
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
