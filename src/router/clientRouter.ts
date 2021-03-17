@@ -39,7 +39,7 @@ clientRouter.post('/addClient', (req, res) => {
     }
 
     db.create(req.body.name).subscribe(() => {
-        return res.send('cliente cadastrado com sucesso');
+        return res.json('cliente cadastrado com sucesso');
     }, (err) => {
         return res.status(500).json({error: err, msg: 'Internal Server Error'});
     });
@@ -56,7 +56,7 @@ clientRouter.post('/updateClient', (req, res) => {
     }
 
     db.update(req.body).subscribe(() => {
-        return res.send('cliente alterado com sucesso');
+        return res.json('cliente alterado com sucesso');
     }, (err) => {
         return res.status(500).json({error: err, msg: 'Internal Server Error'});
     });
@@ -70,7 +70,7 @@ clientRouter.post('/deleteClient', (req, res) => {
         return res.status(401).send('para realizar essa operação é necessario estar logado');
     }
     db.delete(req.body.id).subscribe(() => {
-        return res.send('User deletado com sucesso');
+        return res.json('User deletado com sucesso');
     }, (err) => {
         return res.status(500).json({error: err, msg: 'Internal Server Error'});
     });
@@ -92,7 +92,7 @@ clientRouter.post('/logout', (req, res) => {
         return res.status(401).send('Parametros Ausentes');
     }
     auth.logout(Number(req.body.id)).subscribe(() => {
-        return res.send('logoff efetuado com sucesso');
+        return res.json('logoff efetuado com sucesso');
     }, (err) => {
         return res.status(500).json({error: err, msg: 'Internal Server Error'});
     });

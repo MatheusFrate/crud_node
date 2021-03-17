@@ -1,4 +1,12 @@
+<html>
 
-
-<li *ngFor="let cliente of clients">{{ cliente.idLogin }} {{cliente.name}}</li>
+<body>
+  <div style="width: 400px; margin: auto;">
+    <title style="width: 400px; margin: auto;">Lista de nomes</title>
+    <ol>
+      <li *ngFor="let cliente of clients"> {{cliente.idLogin }} {{cliente.name}}</li>
+    </ol>
+  </div>
+</body>
+</html>
 

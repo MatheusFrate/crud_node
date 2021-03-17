@@ -2,33 +2,33 @@
   <div class="submit-form">
     <div *ngIf="!submitted">
       <div class="form-group">
-        <label for="title">id do login: </label>
+        <label for="title">email: </label>
         <input
           type="text"
           class="form-control"
           id="title"
           required
-          [(ngModel)]="client.idLogin"
+          [(ngModel)]="loginUser.email"
           name="title"
         />
       </div>
 
       <div class="form-group">
-        <label for="description">Nome: </label>
+        <label for="description">senha: </label>
         <input
           class="form-control"
           id="description"
           required
-          [(ngModel)]="client.name"
+          [(ngModel)]="loginUser.password"
           name="description"
         />
       </div>
 
-      <button (click)="addClient()" class="btn btn-success">Submit</button>
+      <button (click)="login()" class="btn btn-success">Submit</button>
     </div>
 
     <div *ngIf="submitted" style="width: 400px; margin: auto;">
-      <h4>You submitted successfully!</h4>
+      <h4>agora você está logado!</h4>
       <button class="btn btn-success" (click)="newTutorial()">Add</button>
     </div>
   </div>

@@ -1,1 +1,24 @@
-<router-outlet></router-outlet>
+<header>
+<div>
+  <nav class="navbar navbar-expand navbar-dark bg-dark">
+    <a href="#" class="navbar-brand">site brabo do mito</a>
+    <div class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a routerLink="client" class="nav-link">Clients</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="addClient" class="nav-link">AddClient</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="addClient" class="nav-link">login</a>
+      </li>
+
+    </div>
+  </nav>
+
+  <div class="container mt-3">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+</header>
+

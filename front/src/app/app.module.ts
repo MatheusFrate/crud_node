@@ -9,6 +9,8 @@ import { AddClientComponent } from './components/add-client/add-client.component
 import { GetClientsComponent } from './components/get-clients/get-clients.component';
 import { GetAllClientsComponent } from './components/get-all-clients/get-all-clients.component';
 import { FormsModule } from '@angular/forms';
+import { LoginComponent } from './components/login/login.component';
+import { LogoutComponent } from './components/logout/logout.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +18,8 @@ import { FormsModule } from '@angular/forms';
     AddClientComponent,
     GetClientsComponent,
     GetAllClientsComponent,
+    LoginComponent,
+    LogoutComponent
   ],
   imports: [
     MatSliderModule,

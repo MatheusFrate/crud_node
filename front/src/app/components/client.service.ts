@@ -1,6 +1,7 @@
+import { ILogin } from './../interfaces/iLogin';
 import { IClient } from '../interfaces/iClient';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, JsonpClientBackend } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -18,15 +19,19 @@ export class ClientService {
     return this.client.get<IClient>(`${environment.apiurl}/client/${id}`);
   }
 
-  public addClient(client: IClient): Observable<any> {
-    return this.client.post(`${environment.apiurl}/addclient`, client);
+  public addClient(cliente: IClient): Observable<any> {
+    return this.client.post(`${environment.apiurl}/addClient`, cliente);
   }
 
-  public updateClient(client: any): Observable<any> {
-    return this.client.post(`${environment.apiurl}/updateClient/`, client);
+  public updateClient(cliente: any): Observable<any> {
+    return this.client.post(`${environment.apiurl}/updateClient/`, cliente);
   }
 
   public deleteClient(id: number): Observable<any> {
     return this.client.post(`${environment.apiurl}/updateClient/`, id);
+  }
+
+  public login(login: ILogin): Observable<any> {
+    return this.client.post(`${environment.apiurl}/login`, login);
   }
 }
