@@ -1,24 +1,10 @@
-<header>
-<div>
-  <nav class="navbar navbar-expand navbar-dark bg-dark">
-    <a href="#" class="navbar-brand">site brabo do mito</a>
-    <div class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a routerLink="client" class="nav-link">Clients</a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="addClient" class="nav-link">AddClient</a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="addClient" class="nav-link">login</a>
-      </li>
-
-    </div>
-  </nav>
-
-  <div class="container mt-3">
-    <router-outlet></router-outlet>
-  </div>
-</div>
-</header>
-
+<mat-toolbar color="primary">
+  <span>Site do Brabo</span>
+  <span class="example-spacer"></span>
+  <button mat-button routerLink="client">Clientes <mat-icon>sentiment_satisfied_alt</mat-icon></button>
+  <button mat-button routerLink="addClient">Cadastrar Clientes <mat-icon>add</mat-icon></button>
+  <button mat-button routerLink="login">Conectar-se <mat-icon>login</mat-icon></button>
+  <button mat-button routerLink="logout">Sair <mat-icon>logout</mat-icon></button>
+</mat-toolbar>
+<span style="margin-top: 5%; display: block;"></span>
+<router-outlet></router-outlet>

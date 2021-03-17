@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { ModalMaterialService } from 'modal-material';
 import { ClientService } from '../client.service';
-import { ILogin } from './../../interfaces/iLogin';
 
 @Component({
   selector: 'app-login',
@@ -9,36 +10,51 @@ import { ILogin } from './../../interfaces/iLogin';
 })
 export class LoginComponent implements OnInit {
 
-  loginUser: ILogin = {
-    email: '',
-    password: ''
-  };
+  email = new FormControl('', [Validators.required, Validators.email]);
+  password = new FormControl('', [Validators.required]);
+
   submitted = false;
 
-  constructor(private clientService: ClientService) { }
+  constructor(private clientService: ClientService, private modal: ModalMaterialService) { }
 
   ngOnInit(): void {
   }
 
   login(): void {
-    this.clientService.login(this.loginUser)
-        .subscribe(
-            res => {
-              console.log(res);
-              this.submitted = true;
-            },
-            error => {
-              console.log(error);
-            }
-        );
+    this.submitted = true;
+
+    const obj = { email: this.email.value, password: this.password.value };
+
+    this.clientService.login(obj).subscribe(() => {
+      setTimeout(() => {
+        window.location.href = 'addClient'
+      }, 3000);
+    }, (error) => {
+      this.submitted = false;
+      this.modal.mTError({
+        btnCloseTitle: 'Fechar',
+        description: error.error && typeof error.error.error !== 'string' ? error.message : error.error.error,
+        disableClose: true,
+        height: 'auto',
+        width: 'auto',
+        title: 'Erro'
+      });
+      console.log(error);
+    });
   }
 
-  newTutorial(): void {
-    this.submitted = false;
-    this.loginUser = {
-      email: '',
-      password: ''
-    };
-  }
+  getErrorMessageEmail() {
+    if (this.email.hasError('required')) {
+      return 'Campo E-mail é Obrigatório.';
+    }
 
+    return this.email.hasError('email') ? 'E-mail Informado Não é Valido.' : '';
+  }
+  getErrorMessagePassword() {
+    if (this.password.hasError('required')) {
+      return 'Campo Senha é Obrigatório.';
+    }
+
+    return '';
+  }
 }

@@ -1,4 +1,5 @@
 import { createPool, Pool } from 'mysql';
+import { isUndefined } from 'node:util';
 import { Observable, throwError, of } from 'rxjs';
 import { consoleTestResultHandler } from 'tslint/lib/test';
 import { DbConfig } from '../config';
@@ -37,12 +38,13 @@ export class AuthService {
                 .query({ sql: query, values: [email, pass] },
                     (err: any | null, results: any) => {
                         if (err) {
-                            obs.error(err);
-                            return obs.complete();
+                            return obs.error('erro tlgd?');
                         }
                         if (results.length > 1) {
-                            obs.error('Usuários Duplicados!');
-                            return obs.complete();
+                            return  obs.error('Usuários Duplicados!');
+                        }
+                        if (results.length < 1) {
+                            return obs.error('cadastro não encontrado');
                         }
                         console.log(results[0]);
                         this.sessions.push(results[0]);
