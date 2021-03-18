@@ -1,12 +1,10 @@
-<html>
-
-<body>
-  <div style="width: 400px; margin: auto;">
-    <title style="width: 400px; margin: auto;">Lista de nomes</title>
-    <ol>
-      <li *ngFor="let cliente of clients"> {{cliente.idLogin }} {{cliente.name}}</li>
-    </ol>
-  </div>
-</body>
-</html>
-
+<mat-card style="width: 500px; margin: auto;" *ngFor="let cliente of clients">
+  <mat-card-content>
+    <mat-list role="list" appearance="outline" style="width: 100%;">
+      <mat-list-item> id: {{ cliente.id }}<br>nome: {{cliente.name}}
+        <button style="margin: 500px;" mat-mini-fab color = "primary" (click)="delete(cliente.id)">
+          <mat-icon matSuffix>delete</mat-icon>
+        </button> </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

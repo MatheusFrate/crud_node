@@ -35,7 +35,7 @@ import { ModalMaterialModule } from 'modal-material';
     GetClientsComponent,
     GetAllClientsComponent,
     LoginComponent,
-    LogoutComponent
+    LogoutComponent,
   ],
   imports: [
     MatSliderModule,

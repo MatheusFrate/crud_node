@@ -27,8 +27,8 @@ export class LoginComponent implements OnInit {
 
     this.clientService.login(obj).subscribe(() => {
       setTimeout(() => {
-        window.location.href = 'addClient'
-      }, 3000);
+        window.location.href = 'addClient';
+      }, 1000);
     }, (error) => {
       this.submitted = false;
       this.modal.mTError({
@@ -43,14 +43,14 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  getErrorMessageEmail() {
+  getErrorMessageEmail(): any {
     if (this.email.hasError('required')) {
       return 'Campo E-mail é Obrigatório.';
     }
 
     return this.email.hasError('email') ? 'E-mail Informado Não é Valido.' : '';
   }
-  getErrorMessagePassword() {
+  getErrorMessagePassword(): string {
     if (this.password.hasError('required')) {
       return 'Campo Senha é Obrigatório.';
     }

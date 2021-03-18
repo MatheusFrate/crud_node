@@ -1,5 +1,6 @@
 import { ClientService } from './../client.service';
-import { IClient } from './../../interfaces/iClient';
+import { FormControl, Validators } from '@angular/forms';
+import { ModalMaterialService } from 'modal-material';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -9,36 +10,59 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AddClientComponent implements OnInit {
 
-  client: IClient = {
-    idLogin: 0,
-    name: ''
-  };
+  idLogin = new FormControl('', [Validators.required]);
+  name = new FormControl('', [Validators.required]);
   submitted = false;
 
 
-  constructor(private clientService: ClientService ) { }
+  constructor(private clientService: ClientService, private modal: ModalMaterialService ) { }
 
   ngOnInit(): void {  }
 
   addClient(): void {
-    this.clientService.addClient(this.client)
-        .subscribe(
-            res => {
-              console.log(res);
-              this.submitted = true;
-            },
-            error => {
-              console.log(error);
-            }
-        );
+
+    this.submitted = true;
+    const client: any = {
+      idLogin: this.idLogin.value,
+      name: this.name.value };
+
+
+    this.clientService.addClient(client).subscribe((res) => {
+      this.modal.mTSuccessConfirm({
+        btnConfirmTitle: 'boa',
+        title: 'sucesso',
+        description: res,
+        btnCloseTitle: 'fechar',
+        width: 'auto',
+        height: 'auto',
+        disableClose: true
+      }).subscribe(() => {
+        window.location.href = 'client';
+      });
+    }, (error) => {
+      this.submitted = false;
+      this.modal.mTError({
+        btnCloseTitle: 'Fechar',
+        description: error.error,
+        disableClose: true,
+        height: 'auto',
+        width: 'auto',
+        title: 'Deu erro'
+      });
+      console.log(error);
+    });
   }
 
-  newTutorial(): void {
-    this.submitted = false;
-    this.client = {
-      idLogin: 0,
-      name: ''
-    };
+  getErrorMessageIdLogin(): any {
+    if (this.idLogin.hasError('required')) {
+      return 'Campo idLogin é Obrigatório.';
+    }
+  }
+  getErrorMessageName(): any {
+    if (this.name.hasError('required')) {
+      return 'Campo nome é Obrigatório.';
+    }
   }
 }
+
 

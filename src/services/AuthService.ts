@@ -41,7 +41,7 @@ export class AuthService {
                             return obs.error('erro tlgd?');
                         }
                         if (results.length > 1) {
-                            return  obs.error('Usuários Duplicados!');
+                            return obs.error('Usuários Duplicados!');
                         }
                         if (results.length < 1) {
                             return obs.error('cadastro não encontrado');
@@ -54,20 +54,18 @@ export class AuthService {
         });
     }
 
-    public isAuthenticated(id: number): IUser | undefined {
+    public isAuthenticated(): boolean | undefined {
         console.log(this.sessions);
-        return this.sessions.find((f) => f.id === id);
+        if (!this.sessions[0]) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
-    public logout(id: number): Observable<any> {
-        const index = this.sessions.findIndex((f) => f.id === id);
-
-        if (index === -1) {
-            return throwError('Falha ao Efetuar Logout. Sessão Não Econtrada.');
-        }
-
-        this.sessions.splice(index, 1);
+    public logout(): Observable<any> {
+        this.sessions.splice(0, 1);
 
         return of(1);
     }

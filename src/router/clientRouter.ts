@@ -30,12 +30,12 @@ clientRouter.get('/client/:id', (req, res) => {
 });
 
 clientRouter.post('/addClient', (req, res) => {
-    if (!req.body.name || !req.body.idLogin) {
-        return res.status(401).send('Parametros Ausentes. Tente Novamente.');
+    if (!req.body.name) {
+        return res.status(401).json('Parametros Ausentes. Tente Novamente.');
     }
-    console.log(auth.isAuthenticated(Number(req.body.idLogin)));
-    if (!auth.isAuthenticated(Number(req.body.idLogin))) {
-        return res.status(401).send('para realizar essa operação é necessario estar logado');
+    console.log(auth.isAuthenticated);
+    if (auth.isAuthenticated()) {
+        return res.status(401).json('para realizar essa operação é necessario estar logado');
     }
 
     db.create(req.body.name).subscribe(() => {
@@ -51,7 +51,7 @@ clientRouter.post('/updateClient', (req, res) => {
         return res.status(401).send('Parametros Ausentes. Tente Novamente.');
     }
 
-    if (!auth.isAuthenticated(Number(req.body.idLogin))) {
+    if (auth.isAuthenticated()) {
         return res.status(401).send('para realizar essa operação é necessario estar logado');
     }
 
@@ -63,11 +63,8 @@ clientRouter.post('/updateClient', (req, res) => {
 });
 
 clientRouter.post('/deleteClient', (req, res) => {
-    if (!req.body.id || !req.body.idLogin) {
+    if (!req.body.id ) {
         return res.status(401).send('Parametros Ausentes. Tente Novamente.');
-    }
-    if (!auth.isAuthenticated(Number(req.body.idLogin))) {
-        return res.status(401).send('para realizar essa operação é necessario estar logado');
     }
     db.delete(req.body.id).subscribe(() => {
         return res.json('User deletado com sucesso');
@@ -88,12 +85,10 @@ clientRouter.post('/login', (req, res) => {
 });
 
 clientRouter.post('/logout', (req, res) => {
-    if (!req.body.id) {
-        return res.status(401).send('Parametros Ausentes');
-    }
-    auth.logout(Number(req.body.id)).subscribe(() => {
+    auth.logout().subscribe(() => {
         return res.json('logoff efetuado com sucesso');
     }, (err) => {
         return res.status(500).json({error: err, msg: 'Internal Server Error'});
     });
 });
+

@@ -27,11 +27,14 @@ export class ClientService {
     return this.client.post(`${environment.apiurl}/updateClient/`, cliente);
   }
 
-  public deleteClient(id: number): Observable<any> {
-    return this.client.post(`${environment.apiurl}/updateClient/`, id);
+  public deleteClient(client: any): Observable<any> {
+    return this.client.post(`${environment.apiurl}/deleteClient/`, client);
   }
 
   public login(login: ILogin): Observable<any> {
     return this.client.post(`${environment.apiurl}/login`, login);
+  }
+  public logout(): Observable<any> {
+    return this.client.post<any>(`${environment.apiurl}/logout`);
   }
 }

@@ -1,10 +1,10 @@
 <mat-toolbar color="primary">
-  <span>Site do Brabo</span>
+  <span>Site do Brabo <mat-icon>mood</mat-icon></span>
   <span class="example-spacer"></span>
   <button mat-button routerLink="client">Clientes <mat-icon>sentiment_satisfied_alt</mat-icon></button>
   <button mat-button routerLink="addClient">Cadastrar Clientes <mat-icon>add</mat-icon></button>
   <button mat-button routerLink="login">Conectar-se <mat-icon>login</mat-icon></button>
-  <button mat-button routerLink="logout">Sair <mat-icon>logout</mat-icon></button>
+  <button mat-button (click)="logout()">Sair <mat-icon>logout</mat-icon></button>
 </mat-toolbar>
 <span style="margin-top: 5%; display: block;"></span>
 <router-outlet></router-outlet>
