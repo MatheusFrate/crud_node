@@ -1,7 +1,10 @@
 import { UserService } from './../services/UserService';
 import express from 'express';
+import { AuthService } from '../services';
 
 const db = UserService.getInstance();
+const auth = AuthService.getInstance();
+
 
 export const userRouter = express.Router();
 
@@ -14,6 +17,12 @@ userRouter.get('/user', (req, res) => {
 });
 
 userRouter.get('/user/:id', (req, res) => {
+    const isAuth = auth.isAuthenticated(req);
+
+    if (!isAuth.status) {
+        return res.status(401).send(isAuth.msg);
+    }
+
     if (!req.params.id || !Number(req.params.id)) {
         return res.status(401).send('Parametros Ausentes. Tente Novamente.');
     }
@@ -30,6 +39,12 @@ userRouter.get('/user/:id', (req, res) => {
 
 
 userRouter.post('/addUser', (req, res) => {
+    const isAuth = auth.isAuthenticated(req);
+
+    if (!isAuth.status) {
+        return res.status(401).send(isAuth.msg);
+    }
+
     if (!req.body.name && !req.body.password && !req.body.email) {
         return res.status(401).send('Parametros ausentes');
     }
@@ -42,6 +57,11 @@ userRouter.post('/addUser', (req, res) => {
 });
 
 userRouter.post('/updateUser', (req, res) => {
+    const isAuth = auth.isAuthenticated(req);
+
+    if (!isAuth.status) {
+        return res.status(401).send(isAuth.msg);
+    }
     if (!req.body.id && !req.body.name && !req.body.password) {
         return res.status(401).send('Parametros ausentes');
     }
@@ -54,6 +74,12 @@ userRouter.post('/updateUser', (req, res) => {
 });
 
 userRouter.post('/deleteUser', (req, res) => {
+    const isAuth = auth.isAuthenticated(req);
+
+    if (!isAuth.status) {
+        return res.status(401).send(isAuth.msg);
+    }
+
     if (!req.body.id) {
         return res.status(401).send('Parametros ausentes');
     }

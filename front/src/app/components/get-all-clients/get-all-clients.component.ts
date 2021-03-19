@@ -15,14 +15,27 @@ export class GetAllClientsComponent implements OnInit {
   clients: IClient[] = [];
   idLog = 0;
   idClient = 0;
+  isAuth = false;
   constructor(private clientService: ClientService, private modal: ModalMaterialService) { }
 
   ngOnInit(): void {
     this.clientService.getClients().subscribe((res) => {
+      this.isAuth = true;
       this.clients = res;
       console.log(res);
-    }, (err) => {
-      console.log(err);
+    }, (error) => {
+      this.isAuth = false;
+      this.modal.mTErrorConfirm({
+        btnConfirmTitle: 'entendido',
+        btnCloseTitle: 'Fechar',
+        description: error.error,
+        disableClose: true,
+        height: 'auto',
+        width: 'auto',
+        title: 'Erro'
+      }).subscribe(() => {
+          window.location.href = 'addClient';
+      });
     });
   }
 

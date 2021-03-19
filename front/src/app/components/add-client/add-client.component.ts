@@ -41,7 +41,8 @@ export class AddClientComponent implements OnInit {
       });
     }, (error) => {
       this.submitted = false;
-      this.modal.mTError({
+      this.modal.mTErrorConfirm({
+        btnConfirmTitle: 'entendido',
         btnCloseTitle: 'Fechar',
         description: error.error,
         disableClose: true,

@@ -1,6 +1,6 @@
 import { AuthService } from './../services/AuthService';
-import express from 'express';
 import { ClientService } from '../services';
+import express from 'express';
 
 const db = ClientService.getInstance();
 const auth = AuthService.getInstance();
@@ -8,6 +8,11 @@ export const clientRouter = express.Router();
 
 
 clientRouter.get('/client', (req, res) => {
+    const isAuth = auth.isAuthenticated(req);
+    if (!isAuth.status) {
+        return res.status(401).send(isAuth.msg);
+    }
+
     db.getAll().subscribe((client) => {
         return res.json(client);
     }, (err) => {
@@ -16,26 +21,33 @@ clientRouter.get('/client', (req, res) => {
 });
 
 clientRouter.get('/client/:id', (req, res) => {
+    const isAuth = auth.isAuthenticated(req);
+
+    if (!isAuth.status) {
+        return res.status(401).send(isAuth.msg);
+    }
+
     if (!req.params.id || !Number(req.params.id)) {
         return res.status(401).send('Parametros Ausentes. Tente Novamente.');
     }
+
     db.getByIndex(Number(req.params.id)).subscribe((client) => {
-    if (!res == null) {
         return res.json(client);
-    } else {
-        return res.sendStatus(404);
-    }}, (err) => {
+    }, (err) => {
         return res.status(500).json({error: err, msg: 'Internal Server Error'});
     });
 });
 
 clientRouter.post('/addClient', (req, res) => {
+
+    const isAuth = auth.isAuthenticated(req);
+
+    if (!isAuth.status) {
+        return res.status(401).send(isAuth.msg);
+    }
+
     if (!req.body.name) {
         return res.status(401).json('Parametros Ausentes. Tente Novamente.');
-    }
-    console.log(auth.isAuthenticated);
-    if (auth.isAuthenticated()) {
-        return res.status(401).json('para realizar essa operação é necessario estar logado');
     }
 
     db.create(req.body.name).subscribe(() => {
@@ -47,12 +59,14 @@ clientRouter.post('/addClient', (req, res) => {
 
 clientRouter.post('/updateClient', (req, res) => {
 
-    if (!req.body.name || !req.body.id || !req.body.idLogin) {
-        return res.status(401).send('Parametros Ausentes. Tente Novamente.');
+    const isAuth = auth.isAuthenticated(req);
+
+    if (!isAuth.status) {
+        return res.status(401).send(isAuth.msg);
     }
 
-    if (auth.isAuthenticated()) {
-        return res.status(401).send('para realizar essa operação é necessario estar logado');
+    if (!req.body.name || !req.body.id) {
+        return res.status(401).send('Parametros Ausentes. Tente Novamente.');
     }
 
     db.update(req.body).subscribe(() => {
@@ -63,9 +77,16 @@ clientRouter.post('/updateClient', (req, res) => {
 });
 
 clientRouter.post('/deleteClient', (req, res) => {
-    if (!req.body.id ) {
+    const isAuth = auth.isAuthenticated(req);
+
+    if (!isAuth.status) {
+        return res.status(401).send(isAuth.msg);
+    }
+
+    if (!req.body.id) {
         return res.status(401).send('Parametros Ausentes. Tente Novamente.');
     }
+
     db.delete(req.body.id).subscribe(() => {
         return res.json('User deletado com sucesso');
     }, (err) => {
@@ -77,6 +98,11 @@ clientRouter.post('/login', (req, res) => {
     if (!req.body.email && !req.body.password) {
         return res.status(401).send('Parametros Ausentes');
     }
+
+    if (auth.isAuthenticatedEmail(req.body.email)) {
+        return res.status(401).send('Usuário Já está conectado.');
+    }
+
     auth.login(req.body.email, req.body.password).subscribe((r) => {
         return res.json(r);
     }, (err) => {
@@ -85,7 +111,17 @@ clientRouter.post('/login', (req, res) => {
 });
 
 clientRouter.post('/logout', (req, res) => {
-    auth.logout().subscribe(() => {
+    const isAuth = auth.isAuthenticated(req);
+
+    if (!isAuth.status) {
+        return res.status(401).send(isAuth.msg);
+    }
+
+    if (!req.body.id) {
+        return res.status(401).send('Parametro Ausente');
+    }
+
+    auth.logout(Number(req.body.id)).subscribe(() => {
         return res.json('logoff efetuado com sucesso');
     }, (err) => {
         return res.status(500).json({error: err, msg: 'Internal Server Error'});

@@ -11,7 +11,6 @@ import { GetClientsComponent } from './components/get-clients/get-clients.compon
 import { GetAllClientsComponent } from './components/get-all-clients/get-all-clients.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
-import { LogoutComponent } from './components/logout/logout.component';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -35,7 +34,6 @@ import { ModalMaterialModule } from 'modal-material';
     GetClientsComponent,
     GetAllClientsComponent,
     LoginComponent,
-    LogoutComponent,
   ],
   imports: [
     MatSliderModule,

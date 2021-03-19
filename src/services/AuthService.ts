@@ -1,7 +1,6 @@
+import { Request } from 'express';
 import { createPool, Pool } from 'mysql';
-import { isUndefined } from 'node:util';
 import { Observable, throwError, of } from 'rxjs';
-import { consoleTestResultHandler } from 'tslint/lib/test';
 import { DbConfig } from '../config';
 import { IUser } from './../interfaces/iUser';
 
@@ -54,18 +53,41 @@ export class AuthService {
         });
     }
 
-    public isAuthenticated(): boolean | undefined {
-        console.log(this.sessions);
-        if (!this.sessions[0]) {
-            return true;
+    public isAuthenticated(req: Request): {msg: string, status: boolean}  {
+        const id = Number(req.get('id'));
+        if (!id) {
+            return {
+                msg: 'Parametro Ausente.',
+                status: false
+            };
+        }
+
+        if (this.sessions.find((f) => f.id === id)) {
+            return {
+                status: true,
+                msg: 'Usuário Autenticado.'
+            };
         } else {
-            return false;
+            return {
+                status: false,
+                msg: 'Para Realizar Essa Operação é Necessario Estar Logado.'
+            };
         }
     }
 
+    public isAuthenticatedEmail(email: string): boolean {
+        return this.sessions.find(f => f.email === email) ? true : false;
+    }
 
-    public logout(): Observable<any> {
-        this.sessions.splice(0, 1);
+
+    public logout(id: number): Observable<any> {
+        const index = this.sessions.findIndex((f) => f.id === id);
+
+        if (index === -1) {
+            return throwError('Sessão nao encontrada.');
+        }
+
+        this.sessions.splice(index, 1);
 
         return of(1);
     }

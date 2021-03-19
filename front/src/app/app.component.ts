@@ -19,7 +19,7 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {}
 
   logout(): void {
-    this.clientService.logout().subscribe((res) => {
+    this.clientService.logout(this.clientService.getCurrentSession().id).subscribe((res) => {
       console.log(res);
       this.modal.mTSuccessConfirm({
         btnConfirmTitle: 'boa',

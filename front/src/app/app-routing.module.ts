@@ -1,4 +1,3 @@
-import { LogoutComponent } from './components/logout/logout.component';
 import { LoginComponent } from './components/login/login.component';
 import { GetClientsComponent } from './components/get-clients/get-clients.component';
 import { GetAllClientsComponent } from './components/get-all-clients/get-all-clients.component';
@@ -14,7 +13,6 @@ const routes: Routes = [
     { path: 'client/:id', component: GetClientsComponent},
     { path: 'addClient', component: AddClientComponent},
     { path: 'login', component: LoginComponent},
-    { path: 'logout', component: LogoutComponent}
 ];
 
 @NgModule({
